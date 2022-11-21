@@ -22,8 +22,11 @@ def step_impl(context):
         number += 1
         userName_field = context.driver.find_element(By.XPATH,
                                                     '//*[@id="post-object-form"]/form/fieldset/div[1]/div/input')
+        userName_field.clear()
         userEmail_field = context.driver.find_element(By.XPATH,
                                                      '//*[@id="post-object-form"]/form/fieldset/div[2]/div/input')
+
+        userEmail_field.clear()
         createUserButton = context.driver.find_element(By.XPATH,
                                                       '//*[@id="post-object-form"]/form/fieldset/div[4]/button')
         userName_field.send_keys(f'{context.login_variables["new_user_name"]}{number}')
@@ -80,10 +83,12 @@ def step_impl(context):
 
 @when('admin deletes a user')
 def step_impl(context):
-    pytest.driver.get(user_id_after_create)
-    status_by_xpath_after_delete = pytest.driver.find_element(By.XPATH,
+    context.driver.get(context.user_id_after_create)
+    context.driver.find_element(By.XPATH, '//*[@id="content"]/div[1]/button').click()
+    context.driver.find_element(By.XPATH, '//*[@id="deleteModal"]/div/div/div[2]/form/button').submit()
+    context.status_by_xpath_after_delete = context.driver.find_element(By.XPATH,
                                                               '//*[@id="content"]/div[2]/div[4]/pre/span/b[1]').text
 
 @then('user is successfully deleted')
 def step_impl(context):
-    assert status_by_xpath_after_delete == 'HTTP 200 OK'
+    assert context.status_by_xpath_after_delete == 'HTTP 200 OK'

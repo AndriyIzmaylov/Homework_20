@@ -30,6 +30,7 @@ def after_all(context):
     context.driver.close()
 
 def after_scenario(context, scenario):
+    context.driver.get(context.user_id_after_create)
     context.driver.find_element(By.XPATH, '//*[@id="content"]/div[1]/button').click()
     context.driver.find_element(By.XPATH, '//*[@id="deleteModal"]/div/div/div[2]/form/button').submit()
     context.driver.get("https://www.aqa.science/api-auth/logout/?next=/users/")
